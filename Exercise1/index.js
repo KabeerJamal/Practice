@@ -8,7 +8,7 @@ const API_CONSTANTS = {
 
 async function getRestaurants(postcode) {
     try {
-        const restaurants = await fetch(API_CONSTANTS.GET_RESTAURANTS);
+        const restaurants = await fetch(API_CONSTANTS.GET_RESTAURANTS(postcode));
 
         //use await if you need access to data
         return await handleResponse(restaurants)//includes other possible status code error as well
@@ -17,10 +17,10 @@ async function getRestaurants(postcode) {
     }
 }
 
-async function handleResponse(restaurants) {
+async function handleResponse(response) {
     let data
     try {
-        data = await restaurants.json()
+        data = await response.json()
     } catch {
         data = {}
     }
@@ -30,15 +30,13 @@ async function handleResponse(restaurants) {
     return data
 }
 
+//based on what api returns as error i can polish it here
 function handleError(error) {
     throw error
 }
 
-async function showRestaurants() {
 
-    try {
-        data = await getRestaurants(POSTCODE)
-
+function showDisplay(data) {
         let i = 0;
         for (const item of data.Restaurants){
 
@@ -46,25 +44,41 @@ async function showRestaurants() {
                 return
             }
             if (item.IsOpenNow) {
-                console.log("--- RESTAURANTS ---")
-                console.log("Name: " + item.Name);
-                console.log("Rating: " + item.RatingStars)
-                let cuisineList = "";
-                for (const cuisine of item.CuisineTypes) {
-                    if (cuisineList === "") {
-                        cuisineList += `${cuisine.Name}`
-                    } else {
-                        cuisineList += `, ${cuisine.Name}`
-                    }
-                    
-                }
-                console.log("Cuisine Types: " + cuisineList)
-                console.log("")
+                printFormat(item)
             }
             i++;
         }
-    } catch {
+}
 
+function printFormat(item) {
+    console.log("--- RESTAURANTS ---")
+    console.log("Name: " + item.Name);
+    console.log("Rating: " + item.RatingStars)
+    let cuisineList = "";
+    for (const cuisine of item.CuisineTypes) {
+        if (cuisineList === "") {
+            cuisineList += `${cuisine.Name}`
+        } else {
+            cuisineList += `, ${cuisine.Name}`
+        }
+        
+    }
+    console.log("Cuisine Types: " + cuisineList)
+    console.log("")
+}
+
+async function showRestaurants() {
+    if (!POSTCODE) {
+        console.log("Please enter an input!")
+    }
+
+    try {
+        const data = await getRestaurants(POSTCODE)
+
+        showDisplay(data.Restaurants)
+
+    } catch (error) {
+        console.log(error)
     }
    
 
