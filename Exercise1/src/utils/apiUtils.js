@@ -6,7 +6,8 @@ async function handleResponse(response) {
         data = {}
     }
     if (!response.ok) {
-        throw data.error
+        const message = data?.error || { message: 'something', status: 404 }
+        throw message
     }
     return data
 }
