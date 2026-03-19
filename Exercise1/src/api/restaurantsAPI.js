@@ -8,7 +8,7 @@ async function getRestaurants(postcode){
         //use await if you need access to data
         return await handleResponse(restaurants)//includes other possible status code error as well
     } catch (error) {
-        handleError(error)//failure to connect to API error only
+        throw error//failure to connect to API error only
     }
 }
 

@@ -42,7 +42,7 @@ test('Response.json() fails', async () => {
 test('response.ok is false and so does Response.json() fails', async () => {
   const fakeResponse = {
     ok: false,
-    json: () => Promise.reject(new Error("doesnt matter what put here"))
+    json: () => Promise.reject(new Error("JSON parsing failed"))
   }
 
   await expect(handleResponse(fakeResponse)).rejects.toStrictEqual( { message: 'something', status: 404 })
