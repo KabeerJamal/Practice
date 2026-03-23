@@ -1,13 +1,15 @@
 
 function showDisplay(data) {
         let i = 0;
+        const result = []
         for (const item of data){
 
             if (i === 2) {
-                return
+                return result
             }
             if (item.IsOpenNow) {
                 printFormat(item)
+                result.push(item)
             }
             i++;
         }
